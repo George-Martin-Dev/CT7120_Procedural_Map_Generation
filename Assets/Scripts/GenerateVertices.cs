@@ -1,89 +1,117 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using DelaunatorSharp;
 
-public class GenerateVertices : MonoBehaviour
-{
+public class GenerateVertices : MonoBehaviour {
     private Mesh mesh;
 
-    [SerializeField] private int gridSize = 25;
-    [SerializeField] private List<Vector3> vertPositions;
-    [SerializeField] private int[] triangles;
+    [SerializeField] private int xSize;
+    [SerializeField] private int zSize;
+    private int[] triangles;
+
+    private Vector3[] triangleCentres;
+
+    private Vector3[] vertices;
+    
 
     [SerializeField] private int mapAreaSize;
 
     [SerializeField] private GameObject vertPrefab;
 
-    void Start()
-    {
+    void Start() {
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
 
-        GenerateVerts();
-        GenerateTris();
-        UpdateMesh();
+        StartCoroutine(CreateShape());
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        
+    void Update() {
+        UpdateMesh();
     }
 
-    private void GenerateVerts() {       
+    private IEnumerator CreateShape() {
+
         const float jitter = 0.5f;
 
         System.Random rng = new System.Random();
 
-        for (int x = 0; x <= gridSize - 1; x++) {
-            for (int z = 0; z <= gridSize - 1; z++) {
+        vertices = new Vector3[(xSize + 1) * (zSize + 1)];
+
+        for (int z = 0, i = 0; z <= zSize; z++) {
+            for (int x = 0; x <= xSize; x++) {
                 float newX = x + jitter * (float)(rng.NextDouble() - rng.NextDouble());
                 float newZ = z + jitter * (float)(rng.NextDouble() - rng.NextDouble());
+                float newY = Mathf.PerlinNoise(x * .3f, z * .3f) * 2f;
 
-                vertPositions.Add(new Vector3(newX, 0, newZ));
+                //vertices[i] = new Vector3(x, 0, z);
+                vertices[i] = new Vector3(newX, newY, newZ);
+                //Instantiate(vertPrefab, vertices[i], Quaternion.identity);
+                i++;
             }
         }
-    }
 
-    private void GenerateTris() {
-        triangles = new int[gridSize * gridSize * 6];
+        triangleCentres = new Vector3[vertices.Length / 3];
+
+        for (int z = 0; z < zSize; z++) {
+            for (int x = 0; x < xSize; x++) {
+                
+            }
+        }
+
+        triangles = new int[xSize * zSize * 6];        
 
         int t = 0;
         int v = 0;
 
-        for (int z = 0; z < gridSize; z++) {
-            for (int x = 0; x < gridSize; x++) {
+        for (int z = 0; z < zSize; z++) {
+            for (int x = 0; x < xSize; x++) {
                 triangles[t + 0] = v + 0;
-                triangles[t + 1] = v + x + 1;
+                triangles[t + 1] = v + xSize + 1;
                 triangles[t + 2] = v + 1;
                 triangles[t + 3] = v + 1;
-                triangles[t + 4] = v + x + 1;
-                triangles[t + 5] = v + x + 2;
+                triangles[t + 4] = v + xSize + 1;
+                triangles[t + 5] = v + xSize + 2;
 
                 v++;
                 t += 6;
+
+                yield return new WaitForSeconds(.1f);
             }
             v++;
-        }
+        }   
     }
 
     void UpdateMesh() {
         mesh.Clear();
 
-        mesh.vertices = vertPositions.ToArray();
+        mesh.vertices = vertices;
         mesh.triangles = triangles;
         mesh.RecalculateNormals();
+
+        mesh.RecalculateBounds();
+        MeshCollider collider = gameObject.GetComponent<MeshCollider>();
+        collider.sharedMesh = mesh;
     }
 
+
     private void OnDrawGizmos() {
-        if (vertPositions == null) {
+        if (vertices == null) {
             return;
         }
 
-        for (int i = 0; i < vertPositions.Count; i++) {
+        for (int i = 0; i < vertices.Length; i++) {
             Gizmos.color = Color.red;
-            Gizmos.DrawSphere(vertPositions[i], .1f);
+            Gizmos.DrawSphere(vertices[i], .1f);
+        }
+
+        if (triangleCentres == null) {
+            return;
+        }
+
+        for (int i = 0; i < triangleCentres.Length; i++) {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawSphere(triangleCentres[i], .1f);
         }
     }
 }
