@@ -2,14 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GenerateTerrain : MonoBehaviour {
-    private Mesh mesh;
+public class TerrainGen1 : MonoBehaviour {
+    private UnityEngine.Mesh mesh;
 
     Vector3[] verts;
     int[] tris;
 
     void Start() {
-        mesh = new Mesh();
+        mesh = new UnityEngine.Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
 
         GenerateMeshInfo();

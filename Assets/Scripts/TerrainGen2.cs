@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GenerateVertices : MonoBehaviour {
-    private Mesh mesh;
+public class TerrainGen2 : MonoBehaviour {
+    private UnityEngine.Mesh mesh;
 
     [SerializeField] private int xSize;
     [SerializeField] private int zSize;
@@ -19,7 +19,7 @@ public class GenerateVertices : MonoBehaviour {
     [SerializeField] private GameObject vertPrefab;
 
     void Start() {
-        mesh = new Mesh();
+        mesh = new UnityEngine.Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
 
         StartCoroutine(CreateShape());
