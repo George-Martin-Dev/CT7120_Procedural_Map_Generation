@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TriangleNet.Geometry;
 
 public class TerrainGen3 : MonoBehaviour {
     private UnityEngine.Mesh mesh;
@@ -12,6 +13,7 @@ public class TerrainGen3 : MonoBehaviour {
     private Vector3[] triangleCentres;
 
     private Vector3[] vertices;
+    private Vertex[] vertexes;
 
     private Vector3[] triPoints;
 
@@ -48,6 +50,7 @@ public class TerrainGen3 : MonoBehaviour {
 
                 //vertices[i] = new Vector3(x, 0, z);
                 vertices[i] = new Vector3(newX, newY, newZ);
+                vertexes[i] = new Vertex(newX, newZ);
                 //Instantiate(vertPrefab, vertices[i], Quaternion.identity);
                 i++;
             }
@@ -97,15 +100,23 @@ public class TerrainGen3 : MonoBehaviour {
     }
 
     private void GenSuperTriangle() {
-        triPoints = new Vector3[2];
+        triPoints = new Vector3[3];
 
-        triPoints[0] = vertices[0] - new Vector3(1, 0, 1);
-        triPoints[1] = vertices[vertices.Length - 1] - new Vector3(xSize / 2, 0, 1);
-        triPoints[2] = vertices[xSize] + new Vector3(1, 0, -1);
+        triPoints[0] = vertices[0] - new Vector3(20, 0, 5);
+        triPoints[1] = vertices[vertices.Length - 1] - new Vector3(xSize / 2, 0, -20);
+        triPoints[2] = vertices[xSize] + new Vector3(20, 0, -5);
+
+        Debug.Log(triPoints[0]);
+        Debug.Log(triPoints[1]);
+        Debug.Log(triPoints[2]);
     }
 
     private void Triangulate(Vector3[] pointList) {
+        Polygon polygon = new Polygon();
 
+        for (int i = 0; i < vertexes.Length; i++) {
+            polygon.Add(vertexes[i]);
+        }
     }
 
     private void OnDrawGizmos() {
@@ -114,7 +125,7 @@ public class TerrainGen3 : MonoBehaviour {
         }
 
         Gizmos.color = Color.red;
-        for (int i = 0; i < vertices.Length; i++) {          
+        for (int i = 0; i < vertices.Length; i++) {
             Gizmos.DrawSphere(vertices[i], .1f);
         }
 
@@ -129,7 +140,13 @@ public class TerrainGen3 : MonoBehaviour {
 
         Gizmos.color = Color.green;
         for (int i = 0; i < triPoints.Length; i++) {
-            Gizmos.DrawSphere(triPoints[i], .1f);
+            Gizmos.DrawSphere(triPoints[i], .5f);
+        }
+
+        if (triPoints.Length > 0) {
+            Gizmos.DrawLine(triPoints[0], triPoints[1]);
+            Gizmos.DrawLine(triPoints[1], triPoints[2]);
+            Gizmos.DrawLine(triPoints[2], triPoints[0]);
         }
     }
 }

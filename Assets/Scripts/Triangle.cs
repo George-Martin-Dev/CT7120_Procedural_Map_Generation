@@ -24,7 +24,7 @@ public class Triangle {
         m_index++;
     }
 
-    public Triangle(Vertex a, Vertex b, Vertex c) {
+    public Triangle(VertexOLD a, VertexOLD b, VertexOLD c) {
         A = a;
         B = b;
         C = c;
@@ -33,9 +33,9 @@ public class Triangle {
     }
 
     #region Triangle Data
-    protected Vertex m_a = null;
-    protected Vertex m_b = null;
-    protected Vertex m_c = null;
+    protected VertexOLD m_a = null;
+    protected VertexOLD m_b = null;
+    protected VertexOLD m_c = null;
 
     protected float m_abLen = 0;
     protected float m_bcLen = 0;
@@ -58,19 +58,19 @@ public class Triangle {
     protected Triangle m_ca = null;
 
     protected bool m_centreComputed = false;
-    protected Vertex m_centre = null;
+    protected VertexOLD m_centre = null;
     #endregion
 
     public int Index { get; protected set; }
 
     public int RegionCode { get; set; }
 
-    public Vertex Centre {
+    public VertexOLD Centre {
         get {
             if (m_centreComputed) {
                 return m_centre;
             }
-            m_centre = new Vertex(
+            m_centre = new VertexOLD(
                 (A.x + B.x + C.x) / 3f,
                 (A.y + B.y + C.y) / 3f,
                 (A.z + B.z + C.z) / 3f);
@@ -92,7 +92,7 @@ public class Triangle {
     public float FarthestFromCentre { get; protected set; }
 
     #region Vertices
-    public Vertex A {
+    public VertexOLD A {
         get { return m_a; }
         set {
             if (m_a == value) {
@@ -107,7 +107,7 @@ public class Triangle {
         }
     }
 
-    public Vertex B {
+    public VertexOLD B {
         get { return m_b; }
         set {
             if (m_b == value) {
@@ -122,7 +122,7 @@ public class Triangle {
         }
     }
 
-    public Vertex C {
+    public VertexOLD C {
         get { return m_c; }
         set {
             if (m_c == value) {
@@ -169,7 +169,7 @@ public class Triangle {
         }
     }
 
-    protected bool VertexTest(Vertex la, Vertex lb, Vertex t) {
+    protected bool VertexTest(VertexOLD la, VertexOLD lb, VertexOLD t) {
         if (la.x == lb.x) {
             return t.x > la.x;
         }
@@ -184,7 +184,7 @@ public class Triangle {
         return (m * t.x + b - t.y) > 0;
     }
 
-    public bool Contains(Vertex t) {
+    public bool Contains(VertexOLD t) {
         float delta = t.DeltaSquaredXY(Centre);
 
         if (delta > FarthestFromCentre) {
@@ -296,7 +296,7 @@ public class Triangle {
         }
     }
 
-    public Vertex OppositeOfEdge(int i) {
+    public VertexOLD OppositeOfEdge(int i) {
 
         if (i < 0) {
             i += 3;
@@ -313,7 +313,7 @@ public class Triangle {
         }
     }
 
-    public void SetVertex(int i, Vertex v) {
+    public void SetVertex(int i, VertexOLD v) {
         
         if (i < 0) {
             i += 3;
@@ -397,7 +397,7 @@ public class Triangle {
 
     }
 
-    protected bool BothIn(Triangle t, Vertex a, Vertex b) {
+    protected bool BothIn(Triangle t, VertexOLD a, VertexOLD b) {
         if (a == A) {
             if (b == B) { AB = t; return true; }
             if (b == C) { CA = t; return true; }
@@ -412,7 +412,7 @@ public class Triangle {
         return false;
     }
 
-    public Vertex GetVertex(int i) {
+    public VertexOLD GetVertex(int i) {
         if (i < 0) {
             i += 3;
         } else if (i > 2) {

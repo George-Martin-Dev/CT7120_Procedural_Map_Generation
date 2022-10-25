@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 public class Mesh {
     protected int m_recursion = 4;
-    protected List<Vertex> m_points = new List<Vertex>();
+    protected List<VertexOLD> m_points = new List<VertexOLD>();
     protected List<Triangle> m_facets = new List<Triangle>();
     protected System.Drawing.RectangleF m_bounds = new System.Drawing.RectangleF(0, 0, 640, 480);
 
     #region getter setters
-    public List<Vertex> points {
+    public List<VertexOLD> points {
         get { return m_points; }
         set { m_points = value; }
     }
@@ -47,7 +47,7 @@ public class Mesh {
         return indicies;
     }
 
-    public void Compute(List<Vertex> set, System.Drawing.RectangleF bounds) {
+    public void Compute(List<VertexOLD> set, System.Drawing.RectangleF bounds) {
         Setup(bounds);
 
         for (int i = 0; i < set.Count; i++) {
@@ -55,7 +55,7 @@ public class Mesh {
         }
     }
 
-    public void Append(Vertex v) {
+    public void Append(VertexOLD v) {
         for (int i = 0; i < facets.Count; i++) {
             if (facets[i].Contains(v)) {
                 Insert(v, facets[i]);
@@ -69,10 +69,10 @@ public class Mesh {
         points.Clear();
         bounds = a_bounds;
 
-        Vertex tl = new Vertex(bounds.Left, bounds.Top, 0);
-        Vertex tr = new Vertex(bounds.Right, bounds.Top, 0);
-        Vertex bl = new Vertex(bounds.Left, bounds.Bottom, 0);
-        Vertex br = new Vertex(bounds.Right, bounds.Bottom, 0);
+        VertexOLD tl = new VertexOLD(bounds.Left, bounds.Top, 0);
+        VertexOLD tr = new VertexOLD(bounds.Right, bounds.Top, 0);
+        VertexOLD bl = new VertexOLD(bounds.Left, bounds.Bottom, 0);
+        VertexOLD br = new VertexOLD(bounds.Right, bounds.Bottom, 0);
 
         Triangle t1 = new Triangle();
         Triangle t2 = new Triangle();
@@ -89,7 +89,7 @@ public class Mesh {
         facets.Add(t2);
     }
 
-    protected void Insert(Vertex v, Triangle old) {
+    protected void Insert(VertexOLD v, Triangle old) {
         if ((old.A.x == v.x) && (old.A.y == v.y)) {
             return;
         }
@@ -192,8 +192,8 @@ public class Mesh {
 
         Triangle[] ts = { a.Edge(0), a.Edge(1), a.Edge(2), b.Edge(0), b.Edge(1), b.Edge(2) };
 
-        Vertex aOp = a.OppositeOfEdge(ai);
-        Vertex bOp = b.OppositeOfEdge(bi);
+        VertexOLD aOp = a.OppositeOfEdge(ai);
+        VertexOLD bOp = b.OppositeOfEdge(bi);
 
         a.SetVertex(ai + 1, bOp);
         b.SetVertex(bi + 1, aOp);

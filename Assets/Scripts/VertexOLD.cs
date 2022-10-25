@@ -4,43 +4,43 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-public class Vertex {
+public class VertexOLD {
 
     public float x { get; set; }
     public float y { get; set; }
     public float z { get; set; }
     public int index { get; set; } 
 
-    public Vertex() {
+    public VertexOLD() {
         x = 0;
         y = 0;
         z = 0;
     }
 
-    public Vertex(float x, float y, float z) {
+    public VertexOLD(float x, float y, float z) {
         this.x = x;
         this.y = y;
         this.z = z;
     }
 
-    public float DeltaSquaredXY(Vertex t) {
+    public float DeltaSquaredXY(VertexOLD t) {
         float dx = (x - t.x);
         float dy = (y - t.y);
         return (dx * dx) + (dy * dy);
     }
 
-    public float DeltaSquared(Vertex t) {
+    public float DeltaSquared(VertexOLD t) {
         float dx = (x - t.x);
         float dy = (y - t.y);
         float dz = (z - t.z);
         return (dx * dx) + (dy * dy) + (dz * dz);
     }
 
-    public float DistanceXY(Vertex t) {
+    public float DistanceXY(VertexOLD t) {
         return (float)System.Math.Sqrt(DeltaSquaredXY(t));
     }
 
-    public float Distance(Vertex t) {
+    public float Distance(VertexOLD t) {
         return (float)System.Math.Sqrt(DeltaSquared(t));
     }
 
