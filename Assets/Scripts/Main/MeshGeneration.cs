@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MeshGeneration : MonoBehaviour {
+    private TerrainGeneration TG;
+    private MeshGeneration MCMG;
+
     private UnityEngine.Mesh mesh;
 
     [SerializeField] private MeshFilter chunkPrefab;
+    private GameObject middleChunk;
     private List<MeshFilter> AllMeshFilters = new List<MeshFilter>();
 
     [SerializeField] private int mapAreaSize;
@@ -13,6 +17,8 @@ public class MeshGeneration : MonoBehaviour {
     [SerializeField] private int zSize;
     private int[] triangles;
     private int meshCount = 4;
+
+    public float sideLength;
 
     private Vector3[] triangleCentres;
 
@@ -23,9 +29,16 @@ public class MeshGeneration : MonoBehaviour {
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject currentChunk;
 
+    public bool vertsRepositioned = false;
     void Start() {
+        TG = GameObject.Find("TerrainGen").GetComponent<TerrainGeneration>();
+        middleChunk = GameObject.FindGameObjectWithTag("middleChunk");
+        MCMG = middleChunk.GetComponent<MeshGeneration>();
+
         xSize = (int)Mathf.Sqrt(mapAreaSize) - 1;
         zSize = (int)Mathf.Sqrt(mapAreaSize) - 1;
+
+        sideLength = xSize + 1;
 
         mesh = new UnityEngine.Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
@@ -36,8 +49,8 @@ public class MeshGeneration : MonoBehaviour {
         //}
 
         CreateMesh();
+        UpdateEdgeVerts();
         UpdateMesh();
-        GetEdgeVerts();
     }
 
     private void CreateMesh() {
@@ -80,6 +93,11 @@ public class MeshGeneration : MonoBehaviour {
             }
             v++;
         }
+
+        botLeftCorner = vertices[0];
+        topLeftCorner = vertices[vertices.Length - 1 - xSize];
+        botRightCorner = vertices[xSize];
+        topRightCorner = vertices[vertices.Length - 1];
     }
 
     void UpdateMesh() {
@@ -109,10 +127,10 @@ public class MeshGeneration : MonoBehaviour {
         AllMeshFilters.Add(filter);
     }
 
-    private Vector3 botLeftCorner;
-    private Vector3 topLeftCorner;
-    private Vector3 botRightCorner;
-    private Vector3 topRightCorner;
+    [HideInInspector] public Vector3 botLeftCorner;
+    [HideInInspector] public Vector3 topLeftCorner;
+    [HideInInspector] public Vector3 botRightCorner;
+    [HideInInspector] public Vector3 topRightCorner;
 
     void GetCurrentChunk() {
         UnityEngine.Mesh mesh;
@@ -199,15 +217,25 @@ public class MeshGeneration : MonoBehaviour {
         }
     }
 
-    [SerializeField] private Vector3[] botVerts;
-    [SerializeField] private Vector3[] leftVerts;
-    [SerializeField] private Vector3[] topVerts;
-    [SerializeField] private Vector3[] rightVerts;
-    void GetEdgeVerts() {
-        UnityEngine.Mesh mesh = GetComponent<MeshFilter>().mesh;
-        Vector3[] vertices = mesh.vertices;
+    public Vector3[] botVerts;
+    public Vector3[] leftVerts;
+    public Vector3[] topVerts;
+    public Vector3[] rightVerts;
 
-        float sideLength = xSize + 1;
+    public Vector3[] midBotVerts;
+    public Vector3[] midLeftVerts;
+    public Vector3[] midTopVerts;
+    public Vector3[] midRightVerts;
+    void UpdateEdgeVerts() {
+
+        if (!CompareTag("middleChunk")) {
+            midBotVerts = MCMG.botVerts;
+            midLeftVerts = MCMG.leftVerts;
+            midTopVerts = MCMG.topVerts;
+            midRightVerts = MCMG.rightVerts;
+        }
+
+        sideLength = xSize + 1;
 
         botVerts = new Vector3[(int)sideLength];
         leftVerts = new Vector3[(int)sideLength];
@@ -247,8 +275,46 @@ public class MeshGeneration : MonoBehaviour {
                 rightVerts[k] = vertices[i];
                 k++;
             }
-
         }
+
+        switch (tag) {
+            case "leftChunk":
+                j = (int)sideLength - 1;
+                k = 0;
+                for (int i = (int)sideLength - 1; i < vertices.Length; i++) {
+                    if (i == j) {
+                        j += (int)sideLength;
+                        vertices[i] = midLeftVerts[k];
+                        Debug.Log($"Left Mesh:\nRight side vert: {vertices[i]}");
+                        Debug.Log($"Middle Mesh:\nLeft side vert: {midLeftVerts[k]}");
+                        k++;
+                    }
+                }
+                break;
+            case "topLeftChunk":
+
+                break;
+            case "topChunk":
+
+                break;
+            case "topRightChunk":
+
+                break;
+            case "rightChunk":
+
+                break;
+            case "bottomRightChunk":
+
+                break;
+            case "bottomChunk":
+
+                break;
+            case "bottomLeftChunk":
+
+                break;
+        }
+
+        vertsRepositioned = true;
     }
 
     private void OnDrawGizmos() {
@@ -259,15 +325,6 @@ public class MeshGeneration : MonoBehaviour {
         for (int i = 0; i < vertices.Length; i++) {
             Gizmos.color = Color.red;
             Gizmos.DrawSphere(vertices[i], .1f);
-        }
-
-        if (triangleCentres == null) {
-            return;
-        }
-
-        for (int i = 0; i < triangleCentres.Length; i++) {
-            Gizmos.color = Color.blue;
-            Gizmos.DrawSphere(triangleCentres[i], .1f);
         }
     }
 }
