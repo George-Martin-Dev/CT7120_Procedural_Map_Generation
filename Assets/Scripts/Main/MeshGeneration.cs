@@ -1,17 +1,16 @@
 using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TerrainGen2 : MonoBehaviour {
+public class MeshGeneration : MonoBehaviour {
     private UnityEngine.Mesh mesh;
 
     [SerializeField] private MeshFilter chunkPrefab;
     private List<MeshFilter> AllMeshFilters = new List<MeshFilter>();
 
     [SerializeField] private int mapAreaSize;
-    private int xSize;
-    private int zSize;
+    [SerializeField] private int xSize;
+    [SerializeField] private int zSize;
     private int[] triangles;
     private int meshCount = 4;
 
@@ -25,16 +24,20 @@ public class TerrainGen2 : MonoBehaviour {
     [SerializeField] private GameObject currentChunk;
 
     void Start() {
-        xSize = mapAreaSize;
-        zSize = mapAreaSize;
+        xSize = (int)Mathf.Sqrt(mapAreaSize) - 1;
+        zSize = (int)Mathf.Sqrt(mapAreaSize) - 1;
 
         mesh = new UnityEngine.Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
 
-        for (int i = 0; i < meshCount; i++) {
-            CreateMesh();
-            UpdateMesh();
-        }
+        //for (int i = 0; i < meshCount; i++) {
+        //    CreateMesh();
+        //    UpdateMesh();
+        //}
+
+        CreateMesh();
+        UpdateMesh();
+        GetEdgeVerts();
     }
 
     private void CreateMesh() {
@@ -196,6 +199,57 @@ public class TerrainGen2 : MonoBehaviour {
         }
     }
 
+    [SerializeField] private Vector3[] botVerts;
+    [SerializeField] private Vector3[] leftVerts;
+    [SerializeField] private Vector3[] topVerts;
+    [SerializeField] private Vector3[] rightVerts;
+    void GetEdgeVerts() {
+        UnityEngine.Mesh mesh = GetComponent<MeshFilter>().mesh;
+        Vector3[] vertices = mesh.vertices;
+
+        float sideLength = xSize + 1;
+
+        botVerts = new Vector3[(int)sideLength];
+        leftVerts = new Vector3[(int)sideLength];
+        topVerts = new Vector3[(int)sideLength];
+        rightVerts = new Vector3[(int)sideLength];
+
+        //Storing bottom vertices
+        for (int i = 0; i < (int)sideLength; i++) {
+            botVerts[i] = vertices[i];
+        }
+
+        //storing left vertices
+        int j = 0;
+        int k = 0;
+        for (int i = 0; i < vertices.Length - (int)sideLength + 1; i++) {
+
+            if (i == j) {
+                j += (int)sideLength;
+                leftVerts[k] = vertices[i];
+                k++;
+            }
+        }
+
+        j = 0;
+        //storing top vertices
+        for (int i = vertices.Length - (int)sideLength; i < vertices.Length; i++) {
+            topVerts[j] = vertices[i];
+            j++;
+        }
+
+        //storing right vertices
+        j = (int)sideLength - 1;
+        k = 0;
+        for (int i = (int)sideLength - 1; i < vertices.Length; i++) {
+            if (i == j) {
+                j += (int)sideLength;
+                rightVerts[k] = vertices[i];
+                k++;
+            }
+
+        }
+    }
 
     private void OnDrawGizmos() {
         if (vertices == null) {
