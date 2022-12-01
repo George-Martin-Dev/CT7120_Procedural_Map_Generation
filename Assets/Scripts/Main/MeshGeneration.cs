@@ -9,7 +9,7 @@ public class MeshGeneration : MonoBehaviour {
     private UnityEngine.Mesh mesh;
 
     [SerializeField] private MeshFilter chunkPrefab;
-    private GameObject middleChunk;
+    public GameObject middleChunk;
     private List<MeshFilter> AllMeshFilters = new List<MeshFilter>();
 
     [SerializeField] private int mapAreaSize;
@@ -40,7 +40,7 @@ public class MeshGeneration : MonoBehaviour {
 
         sideLength = xSize + 1;
 
-        mesh = new UnityEngine.Mesh();
+        mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
 
         //for (int i = 0; i < meshCount; i++) {
@@ -110,21 +110,6 @@ public class MeshGeneration : MonoBehaviour {
         mesh.RecalculateBounds();
         MeshCollider collider = gameObject.GetComponent<MeshCollider>();
         collider.sharedMesh = mesh;
-    }
-
-    void NewUpdateMesh() {
-        MeshFilter filter = Instantiate(chunkPrefab);
-
-        UnityEngine.Mesh mesh = filter.mesh;
-        mesh.Clear();
-
-        mesh.vertices = vertices;
-        mesh.triangles = triangles;
-        mesh.RecalculateNormals();
-        mesh.RecalculateBounds();
-
-        filter.gameObject.SetActive(false);
-        AllMeshFilters.Add(filter);
     }
 
     [HideInInspector] public Vector3 botLeftCorner;
@@ -222,10 +207,36 @@ public class MeshGeneration : MonoBehaviour {
     public Vector3[] topVerts;
     public Vector3[] rightVerts;
 
+    //middle chunk side vertices
     public Vector3[] midBotVerts;
     public Vector3[] midLeftVerts;
     public Vector3[] midTopVerts;
     public Vector3[] midRightVerts;
+
+    //top-left chunk side vertices
+    public Vector3[] TLBotVerts;
+    public Vector3[] TLLeftVerts;
+    public Vector3[] TLTopVerts;
+    public Vector3[] TLRightVerts;
+
+    //top-right chunk side vertices
+    public Vector3[] TRBotVerts;
+    public Vector3[] TRLeftVerts;
+    public Vector3[] TRTopVerts;
+    public Vector3[] TRRightVerts;
+
+    //bottom-right chunk side vertices
+    public Vector3[] BRBotVerts;
+    public Vector3[] BRLeftVerts;
+    public Vector3[] BRTopVerts;
+    public Vector3[] BRRightVerts;
+
+    //bottom-left chunk side vertices
+    public Vector3[] BLBotVerts;
+    public Vector3[] BLLeftVerts;
+    public Vector3[] BLTopVerts;
+    public Vector3[] BLRightVerts;
+
     void UpdateEdgeVerts() {
 
         if (!CompareTag("middleChunk")) {
@@ -279,38 +290,56 @@ public class MeshGeneration : MonoBehaviour {
 
         switch (tag) {
             case "leftChunk":
-                j = (int)sideLength - 1;
+                //connecting left chunk to middle chunk
                 k = 0;
-                for (int i = (int)sideLength - 1; i < vertices.Length; i++) {
-                    if (i == j) {
-                        j += (int)sideLength;
-                        vertices[i] = midLeftVerts[k];
-                        Debug.Log($"Left Mesh:\nRight side vert: {vertices[i]}");
-                        Debug.Log($"Middle Mesh:\nLeft side vert: {midLeftVerts[k]}");
-                        k++;
-                    }
+                for (int i = (int)sideLength - 1; i < vertices.Length; i += (int)sideLength) {
+                    vertices[i] = midLeftVerts[k];
+                    vertices[i] += new Vector3(30, 0, 0);
+                    rightVerts[k] = vertices[i];
+                    k++;
                 }
                 break;
             case "topLeftChunk":
-
+                TLBotVerts = botVerts;
+                TLLeftVerts = leftVerts;
+                TLTopVerts = topVerts;
+                TLRightVerts = rightVerts;
                 break;
             case "topChunk":
-
+                //connecting top chunk to middle chunk
+                for (int i = 0; i < (int)sideLength; i++) {
+                    vertices[i] = midTopVerts[i];
+                    vertices[i] -= new Vector3(0, 0, 30);
+                }
                 break;
             case "topRightChunk":
-
+                TRBotVerts = botVerts;
+                TRLeftVerts = leftVerts;
+                TRTopVerts = topVerts;
+                TRRightVerts = rightVerts;
                 break;
             case "rightChunk":
-
+                //connecting right chunk to middle chunk
+                k = 0;
+                for (int i = 0; i < vertices.Length - (int)sideLength + 1; i += (int)sideLength) {
+                    vertices[i] = midRightVerts[k];
+                    k++;
+                }
                 break;
             case "bottomRightChunk":
-
+                BRBotVerts = botVerts;
+                BRLeftVerts = leftVerts;
+                BRTopVerts = topVerts;
+                BRRightVerts = rightVerts;
                 break;
             case "bottomChunk":
-
+                //connecting bottom chunk to middle chunk
                 break;
             case "bottomLeftChunk":
-
+                BLBotVerts = botVerts;
+                BLLeftVerts = leftVerts;
+                BLTopVerts = topVerts;
+                BLRightVerts = rightVerts;
                 break;
         }
 
