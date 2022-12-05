@@ -6,7 +6,7 @@ public class MeshGeneration : MonoBehaviour {
     private TerrainGeneration TG;
     private MeshGeneration MCMG;
 
-    private UnityEngine.Mesh mesh;
+    private Mesh mesh;
 
     [SerializeField] private MeshFilter chunkPrefab;
     public GameObject middleChunk;
@@ -16,13 +16,10 @@ public class MeshGeneration : MonoBehaviour {
     [SerializeField] private int xSize;
     [SerializeField] private int zSize;
     private int[] triangles;
-    private int meshCount = 4;
 
     public float sideLength;
 
-    private Vector3[] triangleCentres;
-
-    private Vector3[] vertices;
+    /*[HideInInspector] */public Vector3[] vertices;
 
     [SerializeField] private GameObject vertPrefab;
 
@@ -32,9 +29,6 @@ public class MeshGeneration : MonoBehaviour {
     public bool vertsRepositioned = false;
     void Start() {
         TG = GameObject.Find("TerrainGen").GetComponent<TerrainGeneration>();
-        middleChunk = GameObject.FindGameObjectWithTag("middleChunk");
-        MCMG = middleChunk.GetComponent<MeshGeneration>();
-
         xSize = (int)Mathf.Sqrt(mapAreaSize) - 1;
         zSize = (int)Mathf.Sqrt(mapAreaSize) - 1;
 
@@ -42,18 +36,24 @@ public class MeshGeneration : MonoBehaviour {
 
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
-
-        //for (int i = 0; i < meshCount; i++) {
-        //    CreateMesh();
-        //    UpdateMesh();
-        //}
-
-        CreateMesh();
-        UpdateEdgeVerts();
-        UpdateMesh();
     }
 
-    private void CreateMesh() {
+    bool created = false;
+    private void Update() {
+
+        if (middleChunk == null) {
+            middleChunk = GameObject.FindGameObjectWithTag("middleChunk");
+        } else {
+            if (!created) {
+                CreateMesh();
+                UpdateEdgeVerts();
+                UpdateMesh();
+                created = true;
+            }
+        }
+    }
+
+    public void CreateMesh() {
 
         const float jitter = 0.5f;
 
@@ -71,8 +71,6 @@ public class MeshGeneration : MonoBehaviour {
                 i++;
             }
         }
-
-        triangleCentres = new Vector3[vertices.Length / 3];
 
         triangles = new int[xSize * zSize * 6];
 
@@ -100,7 +98,7 @@ public class MeshGeneration : MonoBehaviour {
         topRightCorner = vertices[vertices.Length - 1];
     }
 
-    void UpdateMesh() {
+    public void UpdateMesh() {
         mesh.Clear();
 
         mesh.vertices = vertices;
@@ -116,40 +114,6 @@ public class MeshGeneration : MonoBehaviour {
     [HideInInspector] public Vector3 topLeftCorner;
     [HideInInspector] public Vector3 botRightCorner;
     [HideInInspector] public Vector3 topRightCorner;
-
-    void GetCurrentChunk() {
-        UnityEngine.Mesh mesh;
-
-        Vector3[] vertices;
-
-        int width;
-        int height;
-
-        int layerMask = 1 << 6;
-
-        RaycastHit hit;
-
-        if (Physics.Raycast(player.transform.position, player.transform.TransformDirection(Vector3.down), out hit, 5, layerMask)) {
-            Debug.DrawRay(player.transform.position, player.transform.TransformDirection(Vector3.down) * hit.distance, Color.green);
-
-            currentChunk = hit.transform.gameObject;
-
-            mesh = currentChunk.GetComponent<MeshFilter>().mesh;
-            vertices = mesh.vertices;
-
-            width = vertices.Length / 2;
-            height = vertices.Length / 2;
-
-            botLeftCorner = vertices[0];
-            topLeftCorner = vertices[width * height - width];
-            botRightCorner = vertices[width];
-            topRightCorner = vertices[vertices.Length];
-        } else {
-            Debug.DrawRay(player.transform.position, player.transform.TransformDirection(Vector3.down) * hit.distance, Color.red);
-
-            Debug.Log("Out of bounds!");
-        }
-    }
 
     float GetSqrMagFromEdge(Vector3 vertex1, Vector3 vertex2, Vector3 point) {
         float n = Vector3.Cross(point - vertex1, point - vertex2).sqrMagnitude;
@@ -237,7 +201,8 @@ public class MeshGeneration : MonoBehaviour {
     public Vector3[] BLTopVerts;
     public Vector3[] BLRightVerts;
 
-    void UpdateEdgeVerts() {
+    public void UpdateEdgeVerts() {
+        MCMG = middleChunk.GetComponent<MeshGeneration>();
 
         if (!CompareTag("middleChunk")) {
             midBotVerts = MCMG.botVerts;

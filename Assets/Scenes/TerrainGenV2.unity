@@ -335,6 +335,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1042906753}
   - component: {fileID: 1042906752}
+  - component: {fileID: 1042906754}
+  - component: {fileID: 1042906755}
   m_Layer: 0
   m_Name: TerrainGen
   m_TagString: Untagged
@@ -356,10 +358,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   chunk: {fileID: 4627130921823447118, guid: d3604da2606d2304a8810387acbf9c6d, type: 3}
   middleChunk: {fileID: 0}
-  leftVerts: []
-  topVerts: []
-  rightVerts: []
-  bottomVerts: []
+  chunkPrefab: {fileID: 316968218305117012, guid: d3604da2606d2304a8810387acbf9c6d, type: 3}
+  collectionChecks: 1
+  maxPoolSize: 9
 --- !u!4 &1042906753
 Transform:
   m_ObjectHideFlags: 0
@@ -375,6 +376,34 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1042906754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1042906751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6d16cafce6ebe4458f5b5e5f0f5483e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TG: {fileID: 0}
+--- !u!114 &1042906755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1042906751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0af0ca1179596d84a80e94158126ab2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 1502628614}
+  currentChunk: {fileID: 0}
+  genDistance: 0
 --- !u!1 &1441833170
 GameObject:
   m_ObjectHideFlags: 0
