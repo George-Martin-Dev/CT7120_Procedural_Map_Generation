@@ -313,7 +313,7 @@ GameObject:
   - component: {fileID: 1882779263}
   - component: {fileID: 1882779262}
   - component: {fileID: 1882779261}
-  - component: {fileID: 1882779260}
+  - component: {fileID: 1882779264}
   m_Layer: 0
   m_Name: TerrainGen
   m_TagString: Untagged
@@ -336,22 +336,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1882779260
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1882779258}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 85f39ea7328da5d439af50336ef80440, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  xSize: 20
-  zSize: 20
-  mapAreaSize: 0
-  vertPrefab: {fileID: 0}
 --- !u!64 &1882779261
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -416,3 +400,21 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1882779264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1882779258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78d09337627674d4b9d3e358c152ba05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chunk: {fileID: 4627130921823447118, guid: d3604da2606d2304a8810387acbf9c6d, type: 3}
+  middleChunk: {fileID: 0}
+  leftVerts: []
+  topVerts: []
+  rightVerts: []
+  bottomVerts: []
