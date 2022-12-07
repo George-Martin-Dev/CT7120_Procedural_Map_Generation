@@ -30,7 +30,7 @@ public class UpdateTerrain : MonoBehaviour {
 
         RaycastHit hit;
 
-        if (Physics.Raycast(player.transform.position, player.transform.TransformDirection(Vector3.down), out hit, 5, layerMask)) {
+        if (Physics.Raycast(player.transform.position, player.transform.TransformDirection(Vector3.down), out hit, 15, layerMask)) {
             Debug.DrawRay(player.transform.position, player.transform.TransformDirection(Vector3.down) * hit.distance, Color.green);
 
             currentChunk = hit.transform.gameObject;

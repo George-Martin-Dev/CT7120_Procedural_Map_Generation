@@ -335,7 +335,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1042906753}
   - component: {fileID: 1042906752}
-  - component: {fileID: 1042906754}
   - component: {fileID: 1042906755}
   m_Layer: 0
   m_Name: TerrainGen
@@ -377,19 +376,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1042906754
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1042906751}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c6d16cafce6ebe4458f5b5e5f0f5483e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TG: {fileID: 0}
 --- !u!114 &1042906755
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -19,7 +19,8 @@ public class MeshGeneration : MonoBehaviour {
 
     public float sideLength;
 
-    /*[HideInInspector] */public Vector3[] vertices;
+    /*[HideInInspector] */
+    public Vector3[] vertices;
 
     [SerializeField] GameObject terrain;
 
@@ -198,17 +199,13 @@ public class MeshGeneration : MonoBehaviour {
     public Vector3[] botLeftVerts;
     public Vector3[] botRightVerts;
 
-<<<<<<< Updated upstream
     public void UpdateEdgeVerts() {
         MCMG = middleChunk.GetComponent<MeshGeneration>();
-=======
-    void UpdateEdgeVerts() {
-        GameObject leftChunk = terrain.transform.GetChild(0).gameObject;
-        GameObject topChunk = terrain.transform.GetChild(1).gameObject;
-        GameObject rightChunk = terrain.transform.GetChild(2).gameObject;
-        GameObject bottomChunk = terrain.transform.GetChild(3).gameObject;
+        GameObject leftChunk = terrain.transform.GetChild(1).gameObject;
+        GameObject topChunk = terrain.transform.GetChild(3).gameObject;
+        GameObject rightChunk = terrain.transform.GetChild(5).gameObject;
+        GameObject bottomChunk = terrain.transform.GetChild(7).gameObject;
 
->>>>>>> Stashed changes
 
         if (!CompareTag("middleChunk")) {
             midBotVerts = MCMG.botVerts;
@@ -308,6 +305,8 @@ public class MeshGeneration : MonoBehaviour {
                 //Connecting top-left chunk to left and top chunks
                 k = 0;
                 for (int i = (int)sideLength - 1; i < vertices.Length; i += (int)sideLength) {
+                    Debug.Log(k);
+                    Debug.Log($"Top Left Verts Length: {topLeftVerts.Length}");
                     vertices[i] = topLeftVerts[k];
                     vertices[i] += new Vector3(30, 0, 0);
                     k++;
@@ -358,7 +357,7 @@ public class MeshGeneration : MonoBehaviour {
                 }
 
                 k = 0;
-                for (int i = 0; i < vertices.Length - (int)sideLength + 1; i += (int)sideLength) {
+                for (int i = 0; i < vertices.Length - (int)sideLength; i += (int)sideLength) {
                     vertices[i] = botRightVerts[k];
                     vertices[i] -= new Vector3(30, 0, 0);
                     k++;
