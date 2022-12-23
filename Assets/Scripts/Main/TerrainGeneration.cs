@@ -4,6 +4,7 @@ using System;
 
 public class TerrainGeneration : MonoBehaviour {
     [SerializeField] private GetPosition GP;
+    [SerializeField] private TreeSpawn TS;
 
     [SerializeField] private Transform terrain;
     [SerializeField] private Transform terrainPrefab;
@@ -306,6 +307,9 @@ public class TerrainGeneration : MonoBehaviour {
                     chunks[i].transform.position = middleChunk.transform.position + new Vector3(-30, 0, -30);
                     break;
             }
+        }
+        if (GP.currentChunk != null) {
+            TS.ChooseTree();
         }
     }
 }
