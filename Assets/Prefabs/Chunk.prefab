@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 4627130921823447117}
   - component: {fileID: 4627130921823447114}
   - component: {fileID: 4627130921823447115}
-  - component: {fileID: 4627130921823447113}
   - component: {fileID: 316968218305117012}
+  - component: {fileID: -6274653196412634143}
   m_Layer: 0
   m_Name: Chunk
   m_TagString: Untagged
@@ -54,10 +54,13 @@ MonoBehaviour:
   xSize: 0
   zSize: 0
   sideLength: 0
+  vertices: []
+  terrain: {fileID: 0}
   vertPrefab: {fileID: 8814063569618810857, guid: 65fe658e3b651724d839210a99cb83c2, type: 3}
   player: {fileID: 0}
   currentChunk: {fileID: 0}
   vertsRepositioned: 0
+  created: 0
   botLeftCorner: {x: 0, y: 0, z: 0}
   topLeftCorner: {x: 0, y: 0, z: 0}
   botRightCorner: {x: 0, y: 0, z: 0}
@@ -70,22 +73,14 @@ MonoBehaviour:
   midLeftVerts: []
   midTopVerts: []
   midRightVerts: []
-  TLBotVerts: []
-  TLLeftVerts: []
-  TLTopVerts: []
-  TLRightVerts: []
-  TRBotVerts: []
-  TRLeftVerts: []
-  TRTopVerts: []
-  TRRightVerts: []
-  BRBotVerts: []
-  BRLeftVerts: []
-  BRTopVerts: []
-  BRRightVerts: []
-  BLBotVerts: []
-  BLLeftVerts: []
-  BLTopVerts: []
-  BLRightVerts: []
+  leftTopVerts: []
+  leftBotVerts: []
+  rightTopVerts: []
+  rightBotVerts: []
+  topLeftVerts: []
+  topRightVerts: []
+  botLeftVerts: []
+  botRightVerts: []
 --- !u!33 &4627130921823447114
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -136,7 +131,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &4627130921823447113
+--- !u!114 &316968218305117012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4627130921823447118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8aad9fb705eb864fbef907e58f50fff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!64 &-6274653196412634143
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -150,15 +157,3 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
---- !u!114 &316968218305117012
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4627130921823447118}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8aad9fb705eb864fbef907e58f50fff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

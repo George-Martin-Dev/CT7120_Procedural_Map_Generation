@@ -105,10 +105,6 @@ public class TerrainGen3 : MonoBehaviour {
         triPoints[0] = vertices[0] - new Vector3(20, 0, 5);
         triPoints[1] = vertices[vertices.Length - 1] - new Vector3(xSize / 2, 0, -20);
         triPoints[2] = vertices[xSize] + new Vector3(20, 0, -5);
-
-        Debug.Log(triPoints[0]);
-        Debug.Log(triPoints[1]);
-        Debug.Log(triPoints[2]);
     }
 
     private void Triangulate(Vector3[] pointList) {

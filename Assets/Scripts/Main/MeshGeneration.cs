@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -19,7 +18,6 @@ public class MeshGeneration : MonoBehaviour {
 
     public float sideLength;
 
-    /*[HideInInspector] */
     public Vector3[] vertices;
 
     [SerializeField] GameObject terrain;
@@ -31,7 +29,7 @@ public class MeshGeneration : MonoBehaviour {
 
     public bool vertsRepositioned = false;
     void Start() {
-        terrain = GameObject.Find("Terrain");
+        terrain = transform.parent.gameObject;
 
         TG = GameObject.Find("TerrainGen").GetComponent<TerrainGeneration>();
         xSize = (int)Mathf.Sqrt(mapAreaSize) - 1;
@@ -43,7 +41,7 @@ public class MeshGeneration : MonoBehaviour {
         GetComponent<MeshFilter>().mesh = mesh;
     }
 
-    bool created = false;
+    [HideInInspector] public bool created = false;
     private void Update() {
 
         if (middleChunk == null) {
@@ -58,6 +56,11 @@ public class MeshGeneration : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Generates a grid of slightly randomized vertices.
+    /// Also gets and stores the vertices in each corner, in their own separate variable.
+    /// Using the vertices, a list of ints that represent the triangles for the mesh is created.
+    /// </summary>
     public void CreateMesh() {
 
         const float jitter = 0.5f;
@@ -103,13 +106,16 @@ public class MeshGeneration : MonoBehaviour {
         topRightCorner = vertices[vertices.Length - 1];
     }
 
+    /// <summary>
+    /// Clears and updates the mesh on the chunk by assigning the randomly generated vertices and triangles
+    /// generated in the CreateMesh function.
+    /// </summary>
     public void UpdateMesh() {
         mesh.Clear();
 
         mesh.vertices = vertices;
         mesh.triangles = triangles;
         mesh.RecalculateNormals();
-
         mesh.RecalculateBounds();
         MeshCollider collider = gameObject.GetComponent<MeshCollider>();
         collider.sharedMesh = mesh;
@@ -119,57 +125,6 @@ public class MeshGeneration : MonoBehaviour {
     [HideInInspector] public Vector3 topLeftCorner;
     [HideInInspector] public Vector3 botRightCorner;
     [HideInInspector] public Vector3 topRightCorner;
-
-    float GetSqrMagFromEdge(Vector3 vertex1, Vector3 vertex2, Vector3 point) {
-        float n = Vector3.Cross(point - vertex1, point - vertex2).sqrMagnitude;
-        return n / (vertex1 - vertex2).sqrMagnitude;
-    }
-
-    private List<float> disFromEdges;
-    private Vector3 vertex1;
-    private Vector3 vertex2;
-
-    void FindClosestEdge() {
-        for (int i = 0; i < 3; i++) {
-            switch (i) {
-                case 0:
-                    vertex1 = botLeftCorner;    //] Bottom Edge
-                    vertex2 = botRightCorner;   //] 
-                    break;
-                case 1:
-                    vertex1 = botLeftCorner;    //] Left Edge
-                    vertex2 = topLeftCorner;    //]
-                    break;
-                case 2:
-                    vertex1 = topLeftCorner;    //] Top Edge
-                    vertex2 = topRightCorner;   //]
-                    break;
-                case 3:
-                    vertex1 = topRightCorner;   //] Right Edge
-                    vertex2 = botRightCorner;   //]
-                    break;
-            }
-
-            disFromEdges.Add(GetSqrMagFromEdge(vertex1, vertex2, player.transform.position));
-        }
-
-        int smallestDisIndex = disFromEdges.IndexOf(disFromEdges.Min());
-
-        switch (smallestDisIndex) {
-            case 0:
-
-                break;
-            case 1:
-
-                break;
-            case 2:
-
-                break;
-            case 3:
-
-                break;
-        }
-    }
 
     //side vertices for this chunk
     public Vector3[] botVerts;
@@ -199,13 +154,16 @@ public class MeshGeneration : MonoBehaviour {
     public Vector3[] botLeftVerts;
     public Vector3[] botRightVerts;
 
+    /// <summary>
+    /// Finds and stores the edge vertices for each chunk, in their own list.
+    /// Then appropriately updates the vertices on the neighbouring chunks, so that they appear to connect.
+    /// </summary>
     public void UpdateEdgeVerts() {
         MCMG = middleChunk.GetComponent<MeshGeneration>();
         GameObject leftChunk = terrain.transform.GetChild(1).gameObject;
         GameObject topChunk = terrain.transform.GetChild(3).gameObject;
         GameObject rightChunk = terrain.transform.GetChild(5).gameObject;
         GameObject bottomChunk = terrain.transform.GetChild(7).gameObject;
-
 
         if (!CompareTag("middleChunk")) {
             midBotVerts = MCMG.botVerts;
@@ -305,8 +263,6 @@ public class MeshGeneration : MonoBehaviour {
                 //Connecting top-left chunk to left and top chunks
                 k = 0;
                 for (int i = (int)sideLength - 1; i < vertices.Length; i += (int)sideLength) {
-                    Debug.Log(k);
-                    Debug.Log($"Top Left Verts Length: {topLeftVerts.Length}");
                     vertices[i] = topLeftVerts[k];
                     vertices[i] += new Vector3(30, 0, 0);
                     k++;
